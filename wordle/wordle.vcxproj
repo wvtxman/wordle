@@ -163,6 +163,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="alphabet.ico" />
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -315,7 +315,7 @@ namespace wordle {
 				{
 					lblCorrect->Text = "This word is not in the dictionary!";
 					setLabelPosition();
-					textBox[index]->Focus();
+					if(index != -1)textBox[index]->Focus();
 					NumberOfRowsFilled = 0;
 					CheckWord = 0;
 					NumberOfTrys -= 1;
@@ -614,6 +614,7 @@ namespace wordle {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(frmWordle::typeid));
 			this->btnQuit = (gcnew System::Windows::Forms::Button());
 			this->btnSubmitWord = (gcnew System::Windows::Forms::Button());
 			this->lblCorrect = (gcnew System::Windows::Forms::Label());
@@ -694,10 +695,12 @@ namespace wordle {
 			this->label49 = (gcnew System::Windows::Forms::Label());
 			this->label50 = (gcnew System::Windows::Forms::Label());
 			this->label51 = (gcnew System::Windows::Forms::Label());
+ 
 			this->SuspendLayout();
 			// 
 			// btnQuit
 			// 
+
 			this->btnQuit->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnQuit->Location = System::Drawing::Point(274, 597);
@@ -1736,6 +1739,7 @@ namespace wordle {
 			// 
 			// frmWordle
 			// 
+			
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::LemonChiffon;
@@ -1821,6 +1825,7 @@ namespace wordle {
 			this->Controls->Add(this->btnSubmitWord);
 			this->Controls->Add(this->btnQuit);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
+			this->Icon = gcnew System::Drawing::Icon(L"C:\\cplus\\Wordle Game - NEW WAY\\wordle\\alphabet.ico");
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"frmWordle";
@@ -1911,7 +1916,11 @@ namespace wordle {
 
 		}
 		 
+		//show the word for testing
+		lblCorrect->Text = secretWord;
 
+
+		setLabelPosition();
 
 		textBox[index]->Text = textBox[index]->Text->ToUpper();
 		textBox[index]->SelectionStart = textBox[index]->Text->Length; // Keep the cursor at 
@@ -1994,12 +2003,18 @@ namespace wordle {
 		int index = Array::IndexOf(textBox, sender);
 
 		if (e->KeyChar == (Char)Keys::Enter) {
-			if (GuessedWord->Length == 5) {
-				e->Handled = true;
-				submit(GuessedWord, FirstIndex, secretWord);
-				return;
+			if (GuessedWord != nullptr) {
+				if (GuessedWord->Length == 5 && WordGuessed == false) {
+					e->Handled = true;
+					submit(GuessedWord, FirstIndex, secretWord);
+					GuessedWord = "";
+					return;
+				}
 			}
-			 
+			else {
+			}
+			e->Handled = true;
+			return;
 			 
 		}
 		//if backspace is hit go back one square
@@ -2052,6 +2067,9 @@ namespace wordle {
 
 		ClassPublic* info = new ClassPublic();
 		ClassConvert* convert = new ClassConvert();
+
+		 
+		      
 		btnSubmitWord->Enabled = false;
 		 
 		for (int j = 0; j < 26; j++) {
@@ -2068,19 +2086,13 @@ namespace wordle {
 
 
 		setLabelPosition();
-		frmWordle^ v = gcnew  frmWordle();
-		int formWidth = v->Width;
-		int labelWidth = lblCorrect->Width;
-
-		// Calculate the x position for centering
-		int xPosition = (formWidth - labelWidth) / 2;
-		// Set the label's location
-		lblCorrect->Location = System::Drawing::Point(xPosition, lblCorrect->Location.Y);
+		 
 
 		delete convert;
 		delete info;
 		info = nullptr;
 		convert = nullptr;
+		 
 	}
 
 	private: System::Void frmWordle_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {

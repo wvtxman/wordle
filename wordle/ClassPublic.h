@@ -28,9 +28,13 @@ public:
 	{
 		string inFile = "ListOfWords.txt";
 		string outFile = "FilteredWords.txt";
-
+		if (!fileExists(inFile)) {
+						MessageBox::Show(L"File ListOfWords.txt not found!", "File Not Found", MessageBoxButtons::OK);
+						exit(0);
+		}
+		 
 		fstream inputFile(inFile, ios::in);
-		fstream outputFile(outFile, ios::out);
+		//fstream outputFile(outFile, ios::out);
 
 		const int WORD_LENGTH = 5; //5 letters per word
 
@@ -54,7 +58,7 @@ public:
 
 			if (str.length() == WORD_LENGTH)
 			{
-				outputFile << str << endl; //output to writing file
+			//	outputFile << str << endl; //output to writing file
 				arrayToReturn.push_back(str); //add to vector array
 			}
 		} //end while
@@ -62,10 +66,10 @@ public:
 		sort(arrayToReturn.begin(), arrayToReturn.end()); //using algorithm library
 
 		for (int i = 0; i < arrayToReturn.size(); i++)
-			outputFile << arrayToReturn[i] << endl; //output to writing file
+		//	outputFile << arrayToReturn[i] << endl; //output to writing file
 
 		inputFile.close();
-		outputFile.close();
+	///	outputFile.close();
 
 		return arrayToReturn; //array containing all 'eligible' words
 	} //end importDictionary

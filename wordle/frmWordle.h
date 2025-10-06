@@ -308,7 +308,11 @@ namespace wordle {
 
 			if (theGame.canAttempt() && !(theGame.isSolved())) //still can attempt
 			{
+				//show the word for testing
+				lblCorrect->Text = secretWord;
 
+
+				setLabelPosition();
 				numIterations++;
 
 				if (!theGame.wordIsInDictionary(info->dictionaryArray, convertToLowercase(input))) //invalid word
@@ -336,7 +340,7 @@ namespace wordle {
 
 			//post game results
 			if (theGame.isSolved()) {
-				lblCorrect->Text = "You guessed the word!";
+				lblCorrect->Text = "You guessed the word " + secretWord;
 				NumberOfRowsFilled = 0;
 				btnSubmitWord->Enabled = false;
 				FirstIndex = -1;

@@ -1,9 +1,10 @@
 ﻿#pragma once
-
-#include "pch.h" ;
+  
 #include "ClassPublic.h"; //class containing multiple functions;
 #include "ClassConvert.h"; //class to covnert strings and more;
 #include "Wordle.h" //class containing game logic;
+ 
+ 
 
 
 using namespace System;
@@ -120,56 +121,7 @@ namespace wordle {
 		} //end convertToUppercase
 
 
-		/*
-		open inputFile, picks 5-letter words, writes them to output file, and adds the words to the vector array.
-		Returns the vector array
-		*/
-		vector<string> importDictionary()
-		{
-			string inFile = "ListOfWords.txt";
-			string outFile = "FilteredWords.txt";
-
-			fstream inputFile(inFile, ios::in);
-			fstream outputFile(outFile, ios::out);
-
-			const int WORD_LENGTH = 5; //5 letters per word
-
-			string str; //string to store in individual words read from file 
-			vector<string> arrayToReturn; //vector array to return
-
-			// int vector.capacity() //returns total capacity of vector
-			// int vector.size() //returns size (occupied space) of vector
-
-			while (!inputFile.eof()) //end of file function
-			{
-				inputFile >> str; //read line/word and assign it to str; will ignore whitespaces
-
-				for (int i = 0; i < str.length(); i++)
-				{
-					if (!isalpha(str[i]))
-					{
-						str.erase(i, 1);
-					}
-				}
-
-				if (str.length() == WORD_LENGTH)
-				{
-					outputFile << str << endl; //output to writing file
-					arrayToReturn.push_back(str); //add to vector array
-				}
-			} //end while
-
-			sort(arrayToReturn.begin(), arrayToReturn.end()); //using algorithm library
-
-			for (int i = 0; i < arrayToReturn.size(); i++)
-				outputFile << arrayToReturn[i] << endl; //output to writing file
-
-			inputFile.close();
-			outputFile.close();
-
-			return arrayToReturn; //array containing all 'eligible' words
-		} //end importDictionary
-
+		 
 		/*
 		generates random number, returns a word (the SECRET word, converted to uppercase) selected from the dictionary
 		*/
@@ -274,7 +226,7 @@ namespace wordle {
 		 
 		}
 
-		/*sets the label postion to center of form*/
+		/*sets the label position to center of form*/
 		void setLabelPosition() {
 
 			frmWordle^ v = gcnew  frmWordle();
@@ -293,7 +245,7 @@ namespace wordle {
 			ClassConvert* convert = new ClassConvert();
 			ClassPublic* info = new ClassPublic();
 
-			String^ wordCheck;
+			 
 			NumberOfRowsFilled++;
 
 			btnSubmitWord->BackColor = System::Drawing::Color::Gray;
@@ -309,7 +261,7 @@ namespace wordle {
 			if (theGame.canAttempt() && !(theGame.isSolved())) //still can attempt
 			{
 				//show the word for testing
-				lblCorrect->Text = secretWord;
+			//	lblCorrect->Text = secretWord;
 
 
 				setLabelPosition();
@@ -1892,7 +1844,9 @@ namespace wordle {
 
 
 		secretWord = convert->ConvertStandardStringToSystem(pickWord(info->dictionaryArray)); //selects secret word
-		lblCorrect->Text = secretWord;
+		
+		lblCorrect->Text = "Wordle";
+	
 		setLabelPosition();
 		delete convert;
 		delete info;
@@ -1920,10 +1874,7 @@ namespace wordle {
 
 		}
 		 
-		//show the word for testing
-		lblCorrect->Text = secretWord;
-
-
+		lblCorrect->Text = "Wordle";
 		setLabelPosition();
 
 		textBox[index]->Text = textBox[index]->Text->ToUpper();
@@ -2071,9 +2022,7 @@ namespace wordle {
 
 		ClassPublic* info = new ClassPublic();
 		ClassConvert* convert = new ClassConvert();
-
-		 
-		      
+ 	      
 		btnSubmitWord->Enabled = false;
 		 
 		for (int j = 0; j < 26; j++) {
@@ -2086,7 +2035,7 @@ namespace wordle {
 		secretWord = convert->ConvertStandardStringToSystem(pickWord(info->dictionaryArray)); //selects secret word
 
 		//show the word for testing
-		lblCorrect->Text = secretWord;
+		lblCorrect->Text = "Wordle";// secretWord;
 
 
 		setLabelPosition();

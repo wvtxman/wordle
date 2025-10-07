@@ -26,8 +26,12 @@ public:
 
 	vector<string> importDictionary()
 	{
-		string inFile = "ListOfWords.txt";
-		string outFile = "FilteredWords.txt";
+		ClassConvert* convert = new ClassConvert();
+		String^ p  = getAppPath();
+		std::string path = convert->ConvertSystemStringToStandardString(p);
+		//import dictionary from text file
+		string inFile = path + "\\wordlewords.txt";
+		//string outFile = "FilteredWords.txt";
 		if (!fileExists(inFile)) {
 						MessageBox::Show(L"File ListOfWords.txt not found!", "File Not Found", MessageBoxButtons::OK);
 						exit(0);
@@ -43,23 +47,26 @@ public:
 
 		// int vector.capacity() //returns total capacity of vector
 		// int vector.size() //returns size (occupied space) of vector
-
+		int counter = 0;
+		string strs;
 		while (!inputFile.eof()) //end of file function
 		{
+			counter++;
 			inputFile >> str; //read line/word and assign it to str; will ignore whitespaces
 
 			for (int i = 0; i < str.length(); i++)
 			{
-				if (!isalpha(str[i]))
+				 strs = Trim(str);
+				if (!isalpha(strs[i]))
 				{
-					str.erase(i, 1);
+					strs.erase(i, 1);
 				}
 			}
 
-			if (str.length() == WORD_LENGTH)
+			if (strs.length() == WORD_LENGTH)
 			{
 			//	outputFile << str << endl; //output to writing file
-				arrayToReturn.push_back(str); //add to vector array
+				arrayToReturn.push_back(strs); //add to vector array
 			}
 		} //end while
 
@@ -70,7 +77,7 @@ public:
 
 		inputFile.close();
 	///	outputFile.close();
-
+		counter = counter;
 		return arrayToReturn; //array containing all 'eligible' words
 	} //end importDictionary
 

@@ -22,7 +22,79 @@ public:
 	Boolean fileFound = false;
 	 
 	const char* FILE_WORDS = "words.inf";
+
+
+	vector<string> loadUsedWords() {
+
+		 
+		ClassConvert* convert = new ClassConvert();
+
+		String^ p = getAppPath();
+		std::string path = convert->ConvertSystemStringToStandardString(p);
+		string inFile = path + "\\WordsAlreadyPicked.txt";
+		vector<string> arrayToReturn; //vector array to return
 	
+		//if the file does not exist, create it
+		if (!fileExists(inFile)) {
+			// Declare an ofstream object
+			ofstream file;
+
+			// Attempt to open the file in write mode
+			file.open(inFile, ios::out | ios::app); // 'app' allows appending
+
+			// Check if the file was successfully created
+			if (!file) {
+				cout << "File already exists or could not be created." << endl;
+			}
+			else {
+				cout << "File created successfully." << endl;
+				 
+			}
+			// Close the file
+			file.close();
+		}
+		fstream inputFile(inFile, std::ios::in);
+		 
+
+		const int WORD_LENGTH = 5; //5 letters per word
+
+		string str; //string to store in individual words read from file 
+	 
+
+		 
+		while (!inputFile.eof()) //end of file function
+		{
+			 
+			inputFile >> str; //read line/word and assign it to str; will ignore whitespaces
+
+			for (int i = 0; i < str.length(); i++)
+			{
+				str = Trim(str);
+				if (!isalpha(str [i]))
+				{
+					str .erase(i, 1);
+				}
+			}
+
+			if (str.length() == WORD_LENGTH)
+			{
+				 
+				arrayToReturn.push_back(str); //add to vector array
+			}
+		} //end while
+
+		inputFile.close();
+
+		//reset the used words file
+		int words_used = arrayToReturn.size();
+		if (words_used > 3000 ) {
+			std::ofstream inputFile(inFile, std::ios::trunc);
+			inputFile.close();
+			 
+		}
+	
+		return arrayToReturn;
+	}
 
 	vector<string> importDictionary()
 	{
@@ -37,6 +109,7 @@ public:
 						exit(0);
 		}
 		 
+		 
 		fstream inputFile(inFile, ios::in);
 		//fstream outputFile(outFile, ios::out);
 
@@ -44,40 +117,48 @@ public:
 
 		string str; //string to store in individual words read from file 
 		vector<string> arrayToReturn; //vector array to return
+		
+		  vector<string> wordsUsed = loadUsedWords();
 
-		// int vector.capacity() //returns total capacity of vector
-		// int vector.size() //returns size (occupied space) of vector
-		int counter = 0;
-		string strs;
+		// int s1 =  vector.capacity() //returns total capacity of vector
+		// int s2 = vector.size() //returns size (occupied space) of vector
+		  
+		 
 		while (!inputFile.eof()) //end of file function
 		{
-			counter++;
+			 
 			inputFile >> str; //read line/word and assign it to str; will ignore whitespaces
 
 			for (int i = 0; i < str.length(); i++)
 			{
-				 strs = Trim(str);
-				if (!isalpha(strs[i]))
+				 str  = Trim(str);
+				if (!isalpha(str [i]))
 				{
-					strs.erase(i, 1);
+					str .erase(i, 1);
 				}
 			}
-
-			if (strs.length() == WORD_LENGTH)
-			{
-			//	outputFile << str << endl; //output to writing file
-				arrayToReturn.push_back(strs); //add to vector array
-			}
+		 	 auto it = find(wordsUsed.begin(), wordsUsed.end(), str);
+			 if (it != wordsUsed.end()) {
+			//	cout << "Found" << endl; // Word is found
+			 }
+			 else {
+			 	if (str.length() == WORD_LENGTH)
+			 		arrayToReturn.push_back(str); //add to vector array
+			//	//cout << "Not Found" << endl; // Word is not found
+			 }  
+			  
 		} //end while
+		/*int wordsused = wordsUsed.size();
+		int arrayToReturnSize = arrayToReturn.size();*/
 
-		sort(arrayToReturn.begin(), arrayToReturn.end()); //using algorithm library
+		 sort(arrayToReturn.begin(), arrayToReturn.end()); //using algorithm library
 
-		for (int i = 0; i < arrayToReturn.size(); i++)
+		//for (int i = 0; i < arrayToReturn.size(); i++)
 		//	outputFile << arrayToReturn[i] << endl; //output to writing file
 
 		inputFile.close();
 	///	outputFile.close();
-		counter = counter;
+		 
 		return arrayToReturn; //array containing all 'eligible' words
 	} //end importDictionary
 

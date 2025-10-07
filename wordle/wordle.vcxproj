@@ -23,7 +23,7 @@
     <ProjectGuid>{010c98f7-c4c3-4261-8194-52b45f1d2a97}</ProjectGuid>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>CppCLR_WinFormsProject1</RootNamespace>
+    <RootNamespace>wordle</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>wordle</ProjectName>
   </PropertyGroup>
@@ -176,6 +176,7 @@
   <ItemGroup>
     <EmbeddedResource Include="frmWordle.resx">
       <DependentUpon>frmWordle.h</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -127,6 +127,14 @@ namespace wordle {
 		*/
 		string pickWord(vector<string> arrayOfWords)
 		{
+			ClassPublic* info = new ClassPublic();
+			ClassConvert* convert = new ClassConvert();
+
+			String^ p = info->getAppPath();
+			std::string path = convert->ConvertSystemStringToStandardString(p);
+			string outFile = path + "\\WordsAlreadyPicked.txt";
+			fstream outputFile(outFile,  ios::app);
+
 			std::string randomWord = "";
 			//seeding random generator
 			unsigned seed = time(0);
@@ -141,6 +149,14 @@ namespace wordle {
 
 			//convert word to Uppercase
 			randomWord = convertToUppercase(randomWord);
+
+			outputFile << randomWord << endl; //randomWord to writing file 
+			 
+			outputFile.close();
+			delete info;
+			delete convert;
+			info = nullptr;
+			convert = nullptr;
 
 			return randomWord;
 		} //end pickWord
@@ -219,6 +235,7 @@ namespace wordle {
 					for (int i = 0; i < 26; i++) {//change letter label colors
 						if (letters[i]->Text == textBox[j]->Text)
 							letters[i]->ForeColor = System::Drawing::Color::Black;
+						    letters[i]->BackColor = System::Drawing::Color::Black;
 					}
 				}
 				 
@@ -248,9 +265,7 @@ namespace wordle {
 			 
 			NumberOfRowsFilled++;
 
-			btnSubmitWord->BackColor = System::Drawing::Color::Gray;
-			btnSubmitWord->ForeColor = System::Drawing::Color::Black;
-
+			 
 			string input = convert->ConvertSystemStringToStandardString(GuessedWord);
 			int* outputArray;
 
@@ -261,10 +276,10 @@ namespace wordle {
 			if (theGame.canAttempt() && !(theGame.isSolved())) //still can attempt
 			{
 				//show the word for testing
-			//	lblCorrect->Text = secretWord;
+			//	lblCorrect->Text = secretWord; setLabelPosition();
 
-
-				setLabelPosition();
+				
+				
 				numIterations++;
 
 				if (!theGame.wordIsInDictionary(info->dictionaryArray, convertToLowercase(input))) //invalid word
@@ -272,7 +287,7 @@ namespace wordle {
 					lblCorrect->Text = "This word is not in the dictionary!";
 					setLabelPosition();
 					if(index != -1)textBox[index]->Focus();
-					NumberOfRowsFilled = 0;
+					NumberOfRowsFilled -= 1;
 					CheckWord = 0;
 					NumberOfTrys -= 1;
 					btnSubmitWord->Enabled = false;
@@ -306,17 +321,20 @@ namespace wordle {
 
 
 			}
-			else if (!theGame.canAttempt()) {
-				String^ word = secretWord;
-				lblCorrect->Text = "No more turns: The word was " + word;
+			   
+			if (numIterations == 5 && WordGuessed == false) {
+				std::string word = convert->ConvertSystemStringToStandardString(secretWord);
+					word = convertToLowercase(word);
+					String^ theWord = convert->ConvertStandardStringToSystem(word);
+				lblCorrect->Text = "The word was " + secretWord + "!";
 				GuessedWord = "";
 				secretWord = "";
 				FirstIndex = -1;
 				NumberOfRowsFilled = 0;
+				numIterations = 0;
 				setLabelPosition();
-				 
-			}
 
+			}
 
 
 			delete info;
@@ -651,12 +669,12 @@ namespace wordle {
 			this->label49 = (gcnew System::Windows::Forms::Label());
 			this->label50 = (gcnew System::Windows::Forms::Label());
 			this->label51 = (gcnew System::Windows::Forms::Label());
- 
 			this->SuspendLayout();
 			// 
 			// btnQuit
 			// 
-
+			this->btnQuit->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->btnQuit->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->btnQuit->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnQuit->Location = System::Drawing::Point(274, 597);
@@ -669,25 +687,27 @@ namespace wordle {
 			// 
 			// btnSubmitWord
 			// 
+			this->btnSubmitWord->Cursor = System::Windows::Forms::Cursors::Hand;
 			this->btnSubmitWord->Enabled = false;
+			this->btnSubmitWord->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->btnSubmitWord->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnSubmitWord->Location = System::Drawing::Point(274, 511);
 			this->btnSubmitWord->Name = L"btnSubmitWord";
 			this->btnSubmitWord->Size = System::Drawing::Size(126, 36);
 			this->btnSubmitWord->TabIndex = 26;
-			this->btnSubmitWord->Text = L"Submit Word";
+			this->btnSubmitWord->Text = L"Submit";
 			this->btnSubmitWord->UseVisualStyleBackColor = true;
 			this->btnSubmitWord->Click += gcnew System::EventHandler(this, &frmWordle::btnSubmitWord_Click);
 			// 
 			// lblCorrect
 			// 
 			this->lblCorrect->AutoSize = true;
-			this->lblCorrect->Font = (gcnew System::Drawing::Font(L"Cooper Black", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lblCorrect->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->lblCorrect->Location = System::Drawing::Point(234, 9);
 			this->lblCorrect->Name = L"lblCorrect";
-			this->lblCorrect->Size = System::Drawing::Size(90, 20);
+			this->lblCorrect->Size = System::Drawing::Size(99, 23);
 			this->lblCorrect->TabIndex = 4;
 			this->lblCorrect->Text = L"WORDLE";
 			// 
@@ -969,6 +989,8 @@ namespace wordle {
 			// 
 			// btnNew
 			// 
+			this->btnNew->Cursor = System::Windows::Forms::Cursors::Hand;
+			this->btnNew->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->btnNew->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnNew->Location = System::Drawing::Point(274, 554);
@@ -1695,7 +1717,6 @@ namespace wordle {
 			// 
 			// frmWordle
 			// 
-			
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::LemonChiffon;
@@ -1781,7 +1802,8 @@ namespace wordle {
 			this->Controls->Add(this->btnSubmitWord);
 			this->Controls->Add(this->btnQuit);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
-			this->Icon = gcnew System::Drawing::Icon(L"C:\\cplus\\Wordle Game - NEW WAY\\wordle\\alphabet.ico");
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			//this->Icon = gcnew System::Drawing::Icon(L"C:\\cplus\\Wordle Game - NEW WAY\\wordle\\alphabet.ico");
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"frmWordle";
@@ -1796,7 +1818,7 @@ namespace wordle {
 
 		}
 
-
+		//this->Icon = gcnew System::Drawing::Icon(L"C:\\cplus\\Wordle Game - NEW WAY\\wordle\\alphabet.ico");
 #pragma endregion
 
 		//quit the game
@@ -1943,9 +1965,6 @@ namespace wordle {
 
 		if (GuessedWord->Length == 5) {
 			btnSubmitWord->Enabled = true;
-
-			btnSubmitWord->BackColor = System::Drawing::Color::LightGreen;
-			btnSubmitWord->ForeColor = System::Drawing::Color::White;
  
  
 		}
@@ -1956,7 +1975,7 @@ namespace wordle {
 
 
 		int index = Array::IndexOf(textBox, sender);
-
+		 
 		if (e->KeyChar == (Char)Keys::Enter) {
 			if (GuessedWord != nullptr) {
 				if (GuessedWord->Length == 5 && WordGuessed == false) {
@@ -2023,6 +2042,9 @@ namespace wordle {
 		ClassPublic* info = new ClassPublic();
 		ClassConvert* convert = new ClassConvert();
  	      
+		//get the word to guess
+		secretWord = convert->ConvertStandardStringToSystem(pickWord(info->dictionaryArray)); //selects secret word
+
 		btnSubmitWord->Enabled = false;
 		 
 		for (int j = 0; j < 26; j++) {
@@ -2031,8 +2053,7 @@ namespace wordle {
 			letters[j]->Visible = true;
 			 
 		}
-		//get the word to guess
-		secretWord = convert->ConvertStandardStringToSystem(pickWord(info->dictionaryArray)); //selects secret word
+	 
 
 		//show the word for testing
 		lblCorrect->Text = "Wordle";// secretWord;
@@ -2069,8 +2090,8 @@ namespace wordle {
 	private: System::Void textBox_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
 		int index = Array::IndexOf(textBox, sender);
-		MessageBox::Show(L"Please use the back space!", L"Use Back Space", MessageBoxButtons::OK, MessageBoxIcon::Information);
-		textBox[textboxIndex]->Focus();
+//		MessageBox::Show(L"Please use the back space!", L"Use Back Space", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		textBox[index]->Focus();
 		return;
 		 
 		 
